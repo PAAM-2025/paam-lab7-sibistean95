@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.app.PendingIntent
 
 class MyForegroundService : Service() {
 
@@ -52,10 +53,28 @@ class MyForegroundService : Service() {
         //   - Use "service_channel" as the channelId
         //   - Set a title, text, and small icon
         //   - Mark the notification as ongoing (persistent)`
-        return TODO("Provide the return value")
+        //return TODO("Provide the return value")
 
         // TODO 3: Create a different notification with NotificationCompat.Builder inside your service
         // that opens a certain screen when you press on it. Comment one implementation when you're done
+
+        val notificationIntent = Intent(this, MainActivity::class.java)
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return NotificationCompat.Builder(this, "service_channel")
+            .setContentTitle("My Foreground Service")
+            .setContentText(msg)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setOngoing(true)
+            .setContentIntent(pendingIntent)
+            .setOnlyAlertOnce(true)
+            .build()
     }
     private fun updateNotification(msg: String, progress: Int) {
         val manager = NotificationManagerCompat.from(this)
